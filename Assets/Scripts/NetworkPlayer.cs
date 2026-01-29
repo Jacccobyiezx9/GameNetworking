@@ -8,7 +8,6 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private MeshRenderer m_MeshRenderer;
     [SerializeField] public TextMeshProUGUI nameText;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float rotationSpeed = 10f;
 
     [Header("Networked Properties")]
     [Networked] public Vector3 NetworkedPosition { get; set; }
@@ -30,7 +29,7 @@ public class NetworkPlayer : NetworkBehaviour
                 Camera.main.transform.localRotation = Quaternion.identity;
             }
 
-            var manager = FindAnyObjectByType<NetworkManager>();
+            var manager = FindAnyObjectByType<NetworkSessionManager>();
             RPC_SetPlayerName(manager.playerName);
             RPC_SetPlayerColor(manager.playerColor);
         }

@@ -6,21 +6,26 @@ using System;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
+public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     #region Public Variables
-    [SerializeField] private NetworkPrefabRef playerPrefab;
+    //[SerializeField] private NetworkPrefabRef playerPrefab;
     [SerializeField] private TMP_InputField nameInputField;
     [SerializeField] private TMP_Dropdown colorDropdown;
     [SerializeField] private GameObject panel;
     public string playerName;
     public Color playerColor;
+    public static NetworkSessionManager Instance { get; private set; }
     #endregion
     #region Private Variables
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = null;
     private NetworkRunner _networkRunner;
-    private bool hasName;
-    private bool hasColor;
+
+    private List<PlayerRef> joinedPlayers = new();
+    public IReadOnlyList<PlayerRef> JoinedPlayers => joinedPlayers;
+
+    public event Action<PlayerRef> OnPlayerJoinedEvent;
+    public event Action<PlayerRef> OnPlayerLeftEvent;
     #endregion
 
     public async void StartGame(GameMode gameMode)
@@ -44,11 +49,19 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     }
 
-    #region Unity Callbacks
-    private void Start()
+    private void Awake()
     {
-
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
+
+    #region Unity Callbacks
     public void StartButton()
     {
         panel.SetActive(false);
@@ -59,7 +72,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         playerName = nameInputField.text;
-        hasName = true;
 
         switch (colorDropdown.value)
         {
@@ -71,7 +83,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             case 5: playerColor = Color.black; break;
             default: playerColor = Color.white; break;
         }
-        hasColor = true;
 
         #if SERVER
         StartGame(GameMode.Host);
@@ -107,21 +118,15 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer)
-        {
-            var pos = new Vector3(0, 1f ,0);
-            var networkObj = runner.Spawn(playerPrefab, pos, Quaternion.identity, player);
+        joinedPlayers.Add(player);
+        OnPlayerJoinedEvent?.Invoke(player);
 
-            _spawnedCharacters.Add(player, networkObj);
-        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        if(!_spawnedCharacters.TryGetValue(player, out var playerObject)) return;
-
-        runner.Despawn(playerObject);
-        _spawnedCharacters.Remove(player);
+        joinedPlayers.Remove(player);
+        OnPlayerLeftEvent?.Invoke(player);
     }
     #endregion
 
