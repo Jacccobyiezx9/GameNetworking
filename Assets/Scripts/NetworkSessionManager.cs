@@ -10,11 +10,12 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     #region Public Variables
     //[SerializeField] private NetworkPrefabRef playerPrefab;
-    [SerializeField] private TMP_InputField nameInputField;
-    [SerializeField] private TMP_Dropdown colorDropdown;
-    [SerializeField] private GameObject panel;
     public string playerName;
     public Color playerColor;
+    public int playerTeam;
+    public Transform[] team1Spawns;
+    public Transform[] team2Spawns;
+
     public static NetworkSessionManager Instance { get; private set; }
     #endregion
     #region Private Variables
@@ -59,38 +60,35 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             Destroy(gameObject);
         }
+
+        #if SERVER
+        StartGame(GameMode.Server);
+        #endif
     }
 
     #region Unity Callbacks
     public void StartButton()
     {
-        panel.SetActive(false);
-        if (string.IsNullOrEmpty(nameInputField.text))
-        {
-            Debug.LogWarning("Name cannot be empty!");
-            return;
-        }
-
-        playerName = nameInputField.text;
-
-        switch (colorDropdown.value)
-        {
-            case 0: playerColor = Color.red; break;
-            case 1: playerColor = Color.blue; break;
-            case 2: playerColor = Color.green; break;
-            case 3: playerColor = Color.purple; break;
-            case 4: playerColor = Color.orange; break;
-            case 5: playerColor = Color.black; break;
-            default: playerColor = Color.white; break;
-        }
-
-        #if SERVER
-        StartGame(GameMode.Server);
-        #elif CLIENT
+        #if CLIENT
         StartGame(GameMode.Client);
         #endif
     }
 
+    public void SetPlayerInfo(string name, Color color, int team)
+{
+    playerName = name;
+    playerColor = color;
+    playerTeam = team;
+    Debug.Log($"Player Info Set: {name}, {color}, Team {team}");
+}
+    public Vector3 GetSpawnPosition(int team)
+    {
+        Transform[] spawns = (team == 1) ? team1Spawns : team2Spawns;
+        if (spawns.Length == 0) return Vector3.zero;
+
+        int index = UnityEngine.Random.Range(0, spawns.Length);
+        return spawns[index].position;
+    }
     #endregion
 
 

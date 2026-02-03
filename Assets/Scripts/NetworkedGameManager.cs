@@ -1,107 +1,94 @@
-using UnityEngine;
-using Fusion;
 using System.Collections.Generic;
-using TMPro;
 using System.Linq;
-using System.Collections;
+using Fusion;
+using TMPro;
+using UnityEngine;
 
-public class NetworkedGameManager : NetworkBehaviour
+namespace Network
 {
-    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new();
-    private NetworkSessionManager networkSessionManager;
-    [SerializeField] private NetworkPrefabRef playerPrefab;
-
-    private int maxPlayers = 2;
-    private int timerBeforeStart = 3;
-    [SerializeField] private TextMeshProUGUI timerText;
-    [SerializeField] private TextMeshProUGUI playerCountText;
-
-    [Networked] public TickTimer RoundStartTimer { get; set; }
-
-    private bool hasGameStarted = false;
-
-    private void Awake()
+    public class NetworkedGameManager : NetworkBehaviour
     {
-        networkSessionManager = GetComponent<NetworkSessionManager>();
-    }
+        #region Public Variables
+        [SerializeField] private NetworkPrefabRef playerPrefab;
+        [SerializeField] private TextMeshProUGUI _playerCountText;
+        [SerializeField] private TextMeshProUGUI _timerCountText;
+        #endregion
 
-    public override void Spawned()
-    {
-        base.Spawned();
-        NetworkSessionManager.Instance.OnPlayerJoinedEvent += OnPlayerJoined;
-        NetworkSessionManager.Instance.OnPlayerLeftEvent += OnPlayerLeft;
-    }
+        private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new();
 
-    public override void Despawned(NetworkRunner runner, bool hasState)
-    {
-        NetworkSessionManager.Instance.OnPlayerJoinedEvent -= OnPlayerJoined;
-        NetworkSessionManager.Instance.OnPlayerLeftEvent -= OnPlayerLeft;
-    }
+        private NetworkSessionManager _networkSessionManager;
 
-    public override void FixedUpdateNetwork()
-    {
+        private int maxPlayers = 2;
+        private int timerBeforeStart = 3;
+        private bool GameHasStarted = false;
 
-        playerCountText.text = $"Players: {Object.Runner.ActivePlayers.Count()}/{maxPlayers}";
+        #region Networked Properties
+        [Networked] public TickTimer RoundStartTimer { get; set; }
+        #endregion
 
-        if (RoundStartTimer.IsRunning)
+        public override void Spawned()
         {
-            timerText.text = RoundStartTimer.RemainingTime(Object.Runner).ToString();
-        }
-        else
-        {
-            timerText.text = " ";
+            base.Spawned();
+            NetworkSessionManager.Instance.OnPlayerJoinedEvent += OnPlayerJoined;
+            NetworkSessionManager.Instance.OnPlayerLeftEvent += OnPlayerLeft;
         }
 
-        if (RoundStartTimer.Expired(Object.Runner) && !hasGameStarted)
+        //On destroy
+        public override void Despawned(NetworkRunner runner, bool hasState)
         {
-            OnGameStarted();
-            hasGameStarted = true;
+            NetworkSessionManager.Instance.OnPlayerJoinedEvent -= OnPlayerJoined;
+            NetworkSessionManager.Instance.OnPlayerLeftEvent -= OnPlayerLeft;
         }
-    }
 
-    public override void Render()
-    {
-        base.Render();
-    }
-
-    private void OnPlayerJoined(PlayerRef player)
-    {
-        if (!HasStateAuthority) return;
-        if (NetworkSessionManager.Instance.JoinedPlayers.Count >= maxPlayers)
+        public override void FixedUpdateNetwork()
         {
-            // Start game countdown then spawn
-            RoundStartTimer = TickTimer.CreateFromSeconds(Object.Runner, timerBeforeStart);
-        }
-        Debug.Log($"Player{player.PlayerId} joined");
+            _playerCountText.text = $"Players: {Object.Runner.ActivePlayers.Count()}/{maxPlayers}";
 
-    }
-    private void OnPlayerLeft(PlayerRef player)
-    {
-        if (!HasStateAuthority) return;
-        if (!_spawnedCharacters.TryGetValue(player, out var playerObject)) return;
-        Object.Runner.Despawn(playerObject);
-        _spawnedCharacters.Remove(player);
-    }
-
-    private void OnGameStarted()
-    {
-        Debug.Log("Game Started");
-        StartCoroutine(SpawnInSequence());
-    }
-
-    private IEnumerator SpawnInSequence()
-    {
-        foreach (var player in NetworkSessionManager.Instance.JoinedPlayers)
-        {
-            yield return new WaitForSeconds(1f);
-            var networkObj = Object.Runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
-            if (networkObj != null)
+            if (RoundStartTimer.IsRunning)
             {
-                _spawnedCharacters.Add(player, networkObj);
+                _timerCountText.text = RoundStartTimer.RemainingTime(Object.Runner).ToString();
+            }
+            else
+            {
+                _timerCountText.text = "";
+            }
+
+            if (!GameHasStarted && RoundStartTimer.Expired(Object.Runner))
+            {
+                GameHasStarted = true;
+                OnGameStarted();
+            }
+        }
+
+        private void OnPlayerJoined(PlayerRef player)
+        {
+            if (!HasStateAuthority) return;
+            if (NetworkSessionManager.Instance.JoinedPlayers.Count >= maxPlayers)
+            {
+                //start game count down nad then spawn
+                RoundStartTimer = TickTimer.CreateFromSeconds(Object.Runner, timerBeforeStart);
+            }
+            Debug.Log($"Player {player.PlayerId} Joined");
+        }
+
+        private void OnPlayerLeft(PlayerRef player) 
+        {
+            if (!HasStateAuthority) return;
+            if (!_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject)) return;
+
+            Object.Runner.Despawn(networkObject);
+            _spawnedCharacters.Remove(player);
+        }
+
+        private void OnGameStarted()
+        {
+            Debug.Log($"Game Started");
+            foreach (var playerSpawn in NetworkSessionManager.Instance.JoinedPlayers)
+            {
+                var networkObject = Object.Runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, playerSpawn);
+                _spawnedCharacters.Add(playerSpawn, networkObject);
             }
         }
     }
 }
-
-
 

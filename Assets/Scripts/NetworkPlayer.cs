@@ -13,6 +13,7 @@ public class NetworkPlayer : NetworkBehaviour
     [Networked] public Vector3 NetworkedPosition { get; set; }
     [Networked] public Color PlayerColor { get; set; }
     [Networked] public NetworkString<_32> PlayerName { get; set; }
+    [Networked] public int PlayerTeam { get; set; }
     #region Fusion Callbacks
 
     //Initialization Logic (New Start/Awake)
@@ -29,14 +30,19 @@ public class NetworkPlayer : NetworkBehaviour
                 Camera.main.transform.localRotation = Quaternion.identity;
             }
 
-            var manager = FindAnyObjectByType<NetworkSessionManager>();
-            RPC_SetPlayerName(manager.playerName);
-            RPC_SetPlayerColor(manager.playerColor);
+            var manager = NetworkSessionManager.Instance;
+            if (manager != null)
+            {
+                RPC_SetPlayerName(manager.playerName);
+                RPC_SetPlayerColor(manager.playerColor);
+                RPC_SetTeam(manager.playerTeam);
+            }
         }
 
         if (HasStateAuthority) //server
         {
-            NetworkedPosition += new Vector3(0, 1f, 0);
+            
+            NetworkedPosition = NetworkSessionManager.Instance.GetSpawnPosition(PlayerTeam);
             transform.position = NetworkedPosition;
         }
     }
@@ -102,6 +108,13 @@ public class NetworkPlayer : NetworkBehaviour
             this.PlayerName = name;
         }
             
+    }
+    private void RPC_SetTeam(int team)
+    {
+        if (HasStateAuthority)
+        {
+            PlayerTeam = team;
+        }
     }
     #endregion
 
