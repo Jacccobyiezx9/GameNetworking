@@ -62,19 +62,18 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
             Destroy(gameObject);
         }
 
-#if SERVER
+        #if SERVER
         StartGame(GameMode.Server);
-#endif
+        #endif
     }
 
     #region Unity Callbacks
     public void StartButton()
     {
-#if CLIENT
+        #if CLIENT
         StartGame(GameMode.Client);
-#endif
+        #endif
     }
-
     #endregion
 
 
