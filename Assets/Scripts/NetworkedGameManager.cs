@@ -71,7 +71,7 @@ namespace Network
             Debug.Log($"Player {player.PlayerId} Joined");
         }
 
-        private void OnPlayerLeft(PlayerRef player) 
+        private void OnPlayerLeft(PlayerRef player)
         {
             if (!HasStateAuthority) return;
             if (!_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject)) return;

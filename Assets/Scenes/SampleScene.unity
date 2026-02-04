@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 204433241}
   - component: {fileID: 204433240}
   m_Layer: 0
-  m_Name: Team 2
+  m_Name: Team 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -609,7 +609,7 @@ Transform:
   m_GameObject: {fileID: 204433239}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25, y: 0, z: 0}
+  m_LocalPosition: {x: 2.6, y: 0, z: -54.4}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -786,17 +786,17 @@ MonoBehaviour:
   playerColor: {r: 0, g: 0, b: 0, a: 0}
   playerTeam: 0
   team1Spawns:
-  - {fileID: 673186503}
-  - {fileID: 1493686278}
-  - {fileID: 1882046490}
-  - {fileID: 489987451}
-  - {fileID: 733611550}
-  team2Spawns:
   - {fileID: 1075885588}
   - {fileID: 1286618485}
   - {fileID: 1988696256}
   - {fileID: 1984576390}
   - {fileID: 1395390208}
+  team2Spawns:
+  - {fileID: 673186503}
+  - {fileID: 1493686278}
+  - {fileID: 1882046490}
+  - {fileID: 489987451}
+  - {fileID: 733611550}
 --- !u!4 &238277979
 Transform:
   m_ObjectHideFlags: 0
@@ -1025,7 +1025,7 @@ Transform:
   m_GameObject: {fileID: 304329424}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.51, y: 3.4, z: 1.39059}
+  m_LocalPosition: {x: 15.09, y: 3.4, z: -53.00941}
   m_LocalScale: {x: 0.1254, y: 18.073, z: 32.086}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1117,8 +1117,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.35645685, y: 0.039219797, z: -0.014983304, w: 0.933368}
-  m_LocalPosition: {x: -15.961388, y: 30.05347, z: -38.616722}
+  m_LocalRotation: {x: -0.52209663, y: -0.0017799621, z: 0.0010943859, w: -0.85288376}
+  m_LocalPosition: {x: 14.710369, y: 52.445236, z: -77.874756}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1671,7 +1671,7 @@ Transform:
   m_GameObject: {fileID: 489987450}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0, z: 2.56}
+  m_LocalPosition: {x: 3.8200006, y: 0, z: 2.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2115,7 +2115,7 @@ Transform:
   m_GameObject: {fileID: 673186502}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.33, y: 0, z: 2.72}
+  m_LocalPosition: {x: -0.01, y: 0, z: 2.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2146,7 +2146,7 @@ Transform:
   m_GameObject: {fileID: 733611549}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.27, y: 0, z: -1.45}
+  m_LocalPosition: {x: -1.9499989, y: 0, z: -1.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2558,7 +2558,7 @@ MonoBehaviour:
   teamDropdown: {fileID: 394438180}
   playerName: 
   playerColor: {r: 0, g: 0, b: 0, a: 0}
-  selectedTeam: 0
+  playerTeam: 0
 --- !u!4 &1006594637
 Transform:
   m_ObjectHideFlags: 0
@@ -2674,7 +2674,7 @@ Transform:
   m_GameObject: {fileID: 1075885587}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.59, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3004,7 +3004,7 @@ Transform:
   m_GameObject: {fileID: 1286618484}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.96, y: 0, z: -2.95}
+  m_LocalPosition: {x: -2.37, y: 0, z: -2.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3035,7 +3035,7 @@ Transform:
   m_GameObject: {fileID: 1395390207}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.23, y: 0, z: 3.11}
+  m_LocalPosition: {x: -2.6399999, y: 0, z: 3.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3202,7 +3202,7 @@ Transform:
   m_GameObject: {fileID: 1493686277}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: -1.95}
+  m_LocalPosition: {x: 3.3200006, y: 0, z: -1.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4169,7 +4169,7 @@ Transform:
   m_GameObject: {fileID: 1882046489}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.86, y: 0, z: -2.79}
+  m_LocalPosition: {x: 0.460001, y: 0, z: -2.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4516,7 +4516,7 @@ Transform:
   m_GameObject: {fileID: 1984576389}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.58, y: 0, z: 2.51}
+  m_LocalPosition: {x: 2.17, y: 0, z: 2.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4547,7 +4547,7 @@ Transform:
   m_GameObject: {fileID: 1988696255}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.88, y: 0, z: -2.51}
+  m_LocalPosition: {x: 2.4700003, y: 0, z: -2.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4566,7 +4566,7 @@ GameObject:
   - component: {fileID: 1995203428}
   - component: {fileID: 1995203427}
   m_Layer: 0
-  m_Name: Team 1
+  m_Name: Team 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4659,7 +4659,7 @@ Transform:
   m_GameObject: {fileID: 1995203426}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 27.6, y: 0, z: -54.4}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -5016,11 +5016,11 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 1995203430}
   - {fileID: 204433243}
+  - {fileID: 304329428}
+  - {fileID: 1995203430}
   - {fileID: 1865326954}
   - {fileID: 238277979}
   - {fileID: 1006594637}
   - {fileID: 1209315930}
   - {fileID: 1494660178}
-  - {fileID: 304329428}

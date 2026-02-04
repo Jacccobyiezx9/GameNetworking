@@ -9,12 +9,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Dropdown teamDropdown;
     public string playerName;
     public Color playerColor;
-    public int selectedTeam;
-
+    public int playerTeam;
     public void ShowPanel()
     {
         panel.SetActive(true);
-    } 
+    }
 
     public void HidePanel()
     {
@@ -38,16 +37,19 @@ public class UIManager : MonoBehaviour
 
         switch (teamDropdown.value)
         {
-            case 0: selectedTeam = 1; break;
-            case 1: selectedTeam = 2; break;
-            default: selectedTeam = 1; break;
+            case 0: playerTeam = 1; break;
+            case 1: playerTeam = 2; break;
+            default: playerTeam = 1; break;
         }
+
+
 
         HidePanel();
 
         NetworkSessionManager.Instance.playerName = playerName;
         NetworkSessionManager.Instance.playerColor = playerColor;
-        NetworkSessionManager.Instance.playerTeam = selectedTeam;
+        NetworkSessionManager.Instance.playerTeam = playerTeam;
         NetworkSessionManager.Instance.StartButton();
+
     }
 }

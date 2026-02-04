@@ -17,6 +17,7 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
     public Transform[] team2Spawns;
 
     public static NetworkSessionManager Instance { get; private set; }
+    public PlayerRef LocalPlayerRef { get; private set; }
     #endregion
     #region Private Variables
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = null;
@@ -37,7 +38,7 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
         var sceneInfo = new NetworkSceneInfo();
 
-        if(scene.IsValid)
+        if (scene.IsValid)
             sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
 
         await _networkRunner.StartGame(new StartGameArgs()
@@ -52,7 +53,7 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -61,34 +62,19 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
             Destroy(gameObject);
         }
 
-        #if SERVER
+#if SERVER
         StartGame(GameMode.Server);
-        #endif
+#endif
     }
 
     #region Unity Callbacks
     public void StartButton()
     {
-        #if CLIENT
+#if CLIENT
         StartGame(GameMode.Client);
-        #endif
+#endif
     }
 
-    public void SetPlayerInfo(string name, Color color, int team)
-{
-    playerName = name;
-    playerColor = color;
-    playerTeam = team;
-    Debug.Log($"Player Info Set: {name}, {color}, Team {team}");
-}
-    public Vector3 GetSpawnPosition(int team)
-    {
-        Transform[] spawns = (team == 1) ? team1Spawns : team2Spawns;
-        if (spawns.Length == 0) return Vector3.zero;
-
-        int index = UnityEngine.Random.Range(0, spawns.Length);
-        return spawns[index].position;
-    }
     #endregion
 
 
@@ -119,6 +105,7 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
         joinedPlayers.Add(player);
         OnPlayerJoinedEvent?.Invoke(player);
 
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -131,84 +118,84 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
     #region Unsused Fusion Callbacks
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        
+
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        
+
     }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
     {
-        
+
     }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
     {
-        
+
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
-        
+
     }
 
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        
+
     }
 
- 
+
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
     {
-        
+
     }
 
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
     {
-        
+
     }
 
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
     {
-        
+
     }
 
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
     {
-        
+
     }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
     {
-        
+
     }
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        
+
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-        
+
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        
+
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        
+
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {
-        
+
     }
     #endregion
 }
