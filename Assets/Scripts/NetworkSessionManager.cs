@@ -96,6 +96,13 @@ public class NetworkSessionManager : MonoBehaviour, INetworkRunnerCallbacks
 
         data.InputVector = (forward * v + right * h).normalized;
 
+        data.jumpInput = Input.GetButton("Jump");
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            data.sprintInput = true;
+        }
+
         input.Set(data);
     }
 

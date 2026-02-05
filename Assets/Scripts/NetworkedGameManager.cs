@@ -42,6 +42,16 @@ namespace Network
 
         public override void FixedUpdateNetwork()
         {
+            if (!GameHasStarted && RoundStartTimer.Expired(Object.Runner))
+            {
+                GameHasStarted = true;
+                RoundStartTimer = default;
+                OnGameStarted();
+            }
+        }
+        public override void Render()
+        {
+            base.Render();
             _playerCountText.text = $"Players: {Object.Runner.ActivePlayers.Count()}/{maxPlayers}";
 
             if (RoundStartTimer.IsRunning)
@@ -51,12 +61,6 @@ namespace Network
             else
             {
                 _timerCountText.text = "";
-            }
-
-            if (!GameHasStarted && RoundStartTimer.Expired(Object.Runner))
-            {
-                GameHasStarted = true;
-                OnGameStarted();
             }
         }
 

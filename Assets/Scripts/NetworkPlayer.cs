@@ -5,15 +5,24 @@ using TMPro;
 public class NetworkPlayer : NetworkBehaviour
 {
 
-    [SerializeField] private MeshRenderer m_MeshRenderer;
+    [SerializeField] private SkinnedMeshRenderer m_MeshRenderer;
+    [SerializeField] private Animator anim;
     [SerializeField] public TextMeshProUGUI nameText;
     [SerializeField] private float moveSpeed = 5f;
+
+    private static readonly int Speed = Animator.StringToHash("Speed");
+    private static readonly int Jump = Animator.StringToHash("Jump");
 
     [Header("Networked Properties")]
     [Networked] public Vector3 NetworkedPosition { get; set; }
     [Networked] public Color PlayerColor { get; set; }
     [Networked] public NetworkString<_32> PlayerName { get; set; }
     [Networked] public int PlayerTeam { get; set; }
+
+    [Networked] public NetworkAnimatorData PlayerAnimatorData { get; set; }
+
+    private Vector3 lastKnownPosition;
+    [SerializeField] private float lerpSpeed = 3f;
     #region Fusion Callbacks
 
     //Initialization Logic (New Start/Awake)
@@ -41,10 +50,16 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (HasStateAuthority) //server
         {
-
             NetworkedPosition += new Vector3(0, 1f, 0);
             transform.position = NetworkedPosition;
-        }
+
+            PlayerAnimatorData = new NetworkAnimatorData()
+            {
+                Speed = 0,
+                Jump = false
+            };
+
+    }
     }
 
     //OnDestroy
@@ -68,15 +83,25 @@ public class NetworkPlayer : NetworkBehaviour
 
             }
 
+            if(input.jumpInput)
+                anim.SetTrigger(Jump.ToString());
+
+            anim.SetFloat(Speed, input.sprintInput ? 1f : 0);
+
             NetworkedPosition = transform.position;
-        }
+            PlayerAnimatorData = new NetworkAnimatorData()
+            {
+                Speed = input.sprintInput ? 1f : 0,
+                Jump = input.jumpInput
+            };
+    }
     }
 
 
     //Happens after FixedUpdateNetwork, for non server objects
     public override void Render()
     {
-        this.transform.position = NetworkedPosition;
+        
         if (m_MeshRenderer != null && m_MeshRenderer.material.color != PlayerColor)
         {
             m_MeshRenderer.material.color = PlayerColor;
@@ -88,6 +113,13 @@ public class NetworkPlayer : NetworkBehaviour
             nameText.transform.rotation = Quaternion.LookRotation(nameText.transform.position - Camera.main.transform.position);
         }
 
+        anim.SetFloat(Speed, PlayerAnimatorData.Speed);
+
+    }
+    private void LateUpdate()
+    {
+        this.transform.position = Vector3.Lerp(lastKnownPosition, NetworkedPosition, Runner.DeltaTime * lerpSpeed);
+        lastKnownPosition = NetworkedPosition;
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
